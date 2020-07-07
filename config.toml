@@ -1,0 +1,185 @@
+[app]
+# Interface and port where the app will run its webserver.
+address = "0.0.0.0:9000"
+
+# Public root URL of the listmonk installation that'll be used
+# in the messages for linking to images, unsubscribe page etc.
+root = "https://listmonk.cfapps.io"
+
+# (Optional) full URL to the static logo to be displayed on
+# user facing view such as the unsubscription page.
+# eg: https://mysite.com/images/logo.svg
+logo_url = "https://listmonk.cfapps.io/public/static/logo.png"
+
+# (Optional) full URL to the static favicon to be displayed on
+# user facing view such as the unsubscription page.
+# eg: https://mysite.com/images/favicon.png
+favicon_url = "https://listmonk.cfapps.io/public/static/favicon.png"
+
+# The default 'from' e-mail for outgoing e-mail campaigns.
+from_email = " noreply <noreply@jira.com>"
+
+# List of e-mail addresses to which admin notifications such as
+# import updates, campaign completion, failure etc. should be sent.
+# To disable notice
+
+# Maximum concurrent workers that will attempt to send messages
+# simultaneously. This should ideally depend on the number of CPUs
+# available, and should be based on the maximum number of messages
+# a target SMTP server will accept.
+concurrency = 5
+
+# Maximum number of messages to be sent out per second per worker.
+# If concurrency = 10 and message_rate = 10, then up to 10x10=100 messages
+# may be pushed out every second. This, along with concurrency, should be
+# tweaked to keep the net messages going out per second under the target
+# SMTP's rate limits, if any.
+message_rate = 5
+
+# The number of errors (eg: SMTP timeouts while e-mailing) a running
+# campaign should tolerate before it is paused for manual
+# investigation or intervention. Set to 0 to never pause.
+max_send_errors = 1000
+
+
+[privacy]
+# Allow subscribers to unsubscribe from all mailing lists and mark themselves
+# as blacklisted?
+allow_blacklist = false
+
+# Allow subscribers to export data recorded on them?
+allow_export = false
+
+# Items to include in the data export.
+# profile            Subscriber's profile including custom attributes
+# subscriptions      Subscriber's subscription lists (private list names are masked)
+# campaign_views     Campaigns the subscriber has viewed and the view counts
+# link_clicks        Links that the subscriber has clicked and the click counts
+exportable = ["profile", "subscriptions", "campaign_views", "link_clicks"]
+
+# Allow subscribers to delete themselves from the database?
+# This deletes the subscriber and all their subscriptions.
+# Their association to campaign views and link clicks are also
+# removed while views and click counts remain (with no subscriber
+# associated to them) so that stats and analytics aren't affected.
+allow_wipe = false
+
+
+# Database.
+[db]
+host = "ruby.db.elephantsql.com"
+port = 5432
+user = "rzbhcduh"
+password = "V3i55hTHkDFYbvdxDtEFhm9Ihmq08OWO"
+database = "rzbhcduh"
+ssl_mode = "disable"
+
+# Maximum active and idle connections to pool.
+max_open = 50
+max_idle = 10
+
+# SMTP servers.
+[smtp]
+    [smtp.my0]
+        enabled = true
+        host = "smtp.gmail.com"
+        port = 587
+
+        # "cram", "plain", or "login". Empty string for no auth.
+        auth_protocol = "login"
+        username = "husfhus@gmail.com"
+        password = "adhaduad"
+
+        # Format to send e-mails in: html|plain|both.
+        email_format = "both"
+        # Optional. Some SMTP servers require a FQDN in the hostname.
+        # By default, HELLOs go with "localhost". Set this if a custom
+        # hostname should be used.
+        hello_hostname = "localhost"
+
+        # Maximum concurrent connections to the SMTP server.
+        max_conns = 10
+
+        # Time to wait for new activity on a connection before closing
+        # it and removing it from the pool.
+        idle_timeout = "15s"
+
+        # Message send / wait timeout.
+        wait_timeout = "5s"
+
+        # The number of times a message should be retried if sending fails.
+	    max_msg_retries = 2
+
+        # Enable STARTTLS.
+        tls_enabled = true
+        tls_skip_verify = false
+
+    [smtp.postal]
+        enabled = false
+        host = "gmail"
+        port = 25
+
+        # cram or plain.
+        auth_protocol = "plain"
+        username = "xxxxx"
+        password = ""
+
+        # Format to send e-mails in: html|plain|both.
+        email_format = "both"
+
+        # Optional. Some SMTP servers require a FQDN in the hostname.
+        # By default, HELLOs go with "localhost". Set this if a custom
+        # hostname should be used.
+        hello_hostname = ""
+
+        # Maximum concurrent connections to the SMTP server.
+        max_conns = 10
+
+        # Time to wait for new activity on a connection before closing
+        # it and removing it from the pool.
+        idle_timeout = "15s"
+
+        # Message send / wait timeout.
+        wait_timeout = "5s"
+
+        # The number of times a message should be retried if sending fails.
+	    max_msg_retries = 2
+
+        # Enable STARTTLS.
+        tls_enabled = true
+        tls_skip_verify = false
+
+[upload]
+# File storage backend. "filesystem" or "s3".
+provider = "filesystem"
+
+    [upload.s3]
+        # (Optional). AWS Access Key and Secret Key for the user to access the bucket.
+        # Leaving it empty would default to use instance IAM role.
+        aws_access_key_id = ""
+        aws_secret_access_key = ""
+
+        # AWS Region where S3 bucket is hosted.
+        aws_default_region="ap-south-1"
+
+        # Bucket name.
+        bucket=""
+
+        # Path where the files will be stored inside bucket. Empty for root.
+        bucket_path=""
+
+        # "private" or "public".
+        bucket_type="public"
+
+        # (Optional) Specify TTL (in seconds) for the generated presigned URL.
+        # Expiry value is used only if the bucket is private.
+        expiry="86400"
+
+    [upload.filesystem]
+        # Path to the uploads directory where media will be uploaded.
+        upload_path="./uploads"
+
+        # Upload URI that's visible to the outside world.
+        # The media uploaded to upload_path will be made available publicly
+        # under this URI, for instance, list.yoursite.com/uploads.
+        upload_uri = "/uploads"
